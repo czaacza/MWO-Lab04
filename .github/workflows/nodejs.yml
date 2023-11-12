@@ -25,5 +25,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+      - name: Update version file
+        run: echo $(git rev-list --count HEAD) > version.txt
+
       - run: npm i
       - run: npm run build --if-present
