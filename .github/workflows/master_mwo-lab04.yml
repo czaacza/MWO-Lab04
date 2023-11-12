@@ -1,6 +1,3 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
 name: Build and deploy Node.js app to Azure Web App - mwo-lab04
 
 on:
@@ -15,6 +12,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      # Generate version number based on the number of commits
+      - name: Generate version number
+        run: echo "VERSION=$(git rev-list --count HEAD)" >> $GITHUB_ENV
+
+      # Optional: Create a Git tag for the new version
+      - name: Create Git tag
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git tag ${{ env.VERSION }}
+          git push origin ${{ env.VERSION }}
 
       - name: Set up Node.js version
         uses: actions/setup-node@v3
@@ -60,3 +69,5 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_99BBE736D01446538BD08DC01A6402C3 }}
           package: .
+          environment_variables: |
+            VERSION=${{ env.VERSION }}
