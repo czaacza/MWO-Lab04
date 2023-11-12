@@ -1,9 +1,10 @@
 const express = require('express');
+const fs = require('fs');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Version will be set by GitHub Actions
-const version = process.env.VERSION || '1.0.0';
+// Read version from version.txt
+const version = fs.readFileSync('version.txt', 'utf8') || '1.0.0';
 
 app.get('/', (req, res) => {
   res.send(`Current version: ${version}`);
